@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using LoginApp.ViewModel;
 
 namespace LoginApp.View
 {
@@ -24,5 +25,11 @@ namespace LoginApp.View
         {
             InitializeComponent();
         }
+        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (this.DataContext is UserLoginViewModel vm)
+                vm.Password = ((PasswordBox)sender).Password;
+        }
+
     }
 }

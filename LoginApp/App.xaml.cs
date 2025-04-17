@@ -7,6 +7,7 @@ using LoginApp.Model;
 using LoginApp.Utils;
 using LoginApp.Data.Repositories;
 using LoginApp.Data.Repositories.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace LoginApp
 {
@@ -58,7 +59,16 @@ namespace LoginApp
 
             var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
             mainWindow.Show();
+
+            this.DispatcherUnhandledException += (sender, args) =>
+            {
+                MessageBox.Show($"Une erreur non gérée s'est produite.", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                args.Handled = true;
+            };
+
             base.OnStartup(e);
         }
+
+
     }
 }
