@@ -19,23 +19,18 @@ jobs:
         
     - name: Recréer App.config depuis un secret
       run: |
-        cat <<EOF > LoginApp/App.config
+        cat <<EOF > LoginApp/App1.config
         ${{ secrets.APP_CONFIG_PROD }}
         EOF
       shell: bash
 
     - name: Publish WPF app
       run: >
-        dotnet publish person-wpf-demo/person-wpf-demo.csproj
+        dotnet publish LoginApp/LoginApp.csproj
         --configuration Release
         --runtime win-x64
         --self-contained true
         --output publish
-
-    - name: Generate installer with Inno Setup
-      uses: Minionguyjpro/Inno-Setup-Action@v1.2.5
-      with:
-        path: installer/setup.iss
 
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v2
