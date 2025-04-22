@@ -1,19 +1,28 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using LoginApp.Model;
 using System.IO;
+using LoginApp.Utils.Services;
+using System.Configuration;
 
 public class ApplicationDbContext : DbContext
 {
+    private readonly IConfigurationService _configurationService;
+
+    public ApplicationDbContext(IConfigurationService configurationService)
+    {
+        _configurationService = configurationService;
+    }
+
     protected override void OnConfiguring(
        DbContextOptionsBuilder optionsBuilder)
     {
+        var rawDbPath = ConfigurationManager.AppSettings["DbPath"];
+        var resolvedDbPath = Environment.ExpandEnvironmentVariables(rawDbPath);
 
-        var dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "LoginApp", "LoginApp.db");
-        Directory.CreateDirectory(Path.GetDirectoryName(dbPath));
-        var connectionString = $"Data Source={dbPath}";
+        Directory.CreateDirectory(Path.GetDirectoryName(resolvedDbPath));
+        var connectionString = $"Data Source={resolvedDbPath}";
 
         optionsBuilder.UseSqlite(connectionString);
-
     }
 
     public DbSet<User> Users { get; set; }
@@ -22,12 +31,10 @@ public class ApplicationDbContext : DbContext
     {
         if (!Users.Any())
         {
-            var hashedPassword1 = BCrypt.Net.BCrypt.HashPassword("motdepasse");
-            var hashedPassword2 = BCrypt.Net.BCrypt.HashPassword("bonjour");
-            var user1 = new User { Email = "admin@test.com", Password = hashedPassword1 };
-            var user2 = new User { Email = "user@test.com", Password = hashedPassword2 };
+            var hashedPassword1 = BCrypt.Net.BCrypt.HashPassword(_configurationService.GetDefaultAdminPassword());
+            var user1 = new User { Email = _configurationService.GetDefaultAdminUserName(), Password = hashedPassword1 };
 
-            Users.AddRange(user1, user2);
+            Users.AddRange(user1);
 
             SaveChanges();
         }

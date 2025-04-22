@@ -8,6 +8,8 @@ using LoginApp.Utils;
 using LoginApp.Data.Repositories;
 using LoginApp.Data.Repositories.Interfaces;
 using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
+using NLog;
 
 namespace LoginApp
 {
@@ -18,6 +20,15 @@ namespace LoginApp
         public App()
         {
             IServiceCollection services = new ServiceCollection();
+
+            LogManager.Configuration = new NLog.Config.XmlLoggingConfiguration("NLog.config");
+            services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.ClearProviders();
+                loggingBuilder.AddNLog();
+            });
+
+            services.AddSingleton<IConfigurationService, ConfigurationService>();
 
             services.AddSingleton<MainWindow>(provider => new MainWindow
             {
