@@ -19,7 +19,7 @@ jobs:
         
     - name: Recréer App.config depuis un secret
       run: |
-        cat <<EOF > LoginApp/App1.config
+        cat <<EOF > LoginApp/App.config
         ${{ secrets.APP_CONFIG_PROD }}
         EOF
       shell: bash
