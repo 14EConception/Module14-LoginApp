@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LoginApp.Utils.Services
+namespace LoginApp.Utils.Services.Interfaces
 {
     public interface IConfigurationService
     {

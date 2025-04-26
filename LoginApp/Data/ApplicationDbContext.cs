@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using LoginApp.Model;
 using System.IO;
-using LoginApp.Utils.Services;
 using System.Configuration;
+using LoginApp.Utils.Services.Interfaces;
 
 public class ApplicationDbContext : DbContext
 {
